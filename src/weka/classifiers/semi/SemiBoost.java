@@ -1,6 +1,7 @@
 package weka.classifiers.semi;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,7 +47,7 @@ public class SemiBoost extends RandomizableIteratedSingleClassifierEnhancer impl
 		instances.setClassIndex(instances.numAttributes() - 1);
 
 		double acc = 0;
-		int n = 100;
+		int n = 1;
 		for (int i = 0; i < n; i++) {
 
 			Random rand = new Random(i);
@@ -73,6 +74,10 @@ public class SemiBoost extends RandomizableIteratedSingleClassifierEnhancer impl
 				}
 			}
 
+			PrintStream out = new PrintStream(new File("Test.arff"));
+			out.println(train.toString());
+			out.close();
+
 			SemiBoost classifier = new SemiBoost();
 			classifier.setSeed(i);
 			classifier.buildClassifier(new Instances(train));
@@ -96,6 +101,7 @@ public class SemiBoost extends RandomizableIteratedSingleClassifierEnhancer impl
 	private Instances labeled;
 
 	public SemiBoost() {
+		//J48 config
 		setClassifier(new J48());
 		setNumIterations(10);
 	}
@@ -274,10 +280,18 @@ public class SemiBoost extends RandomizableIteratedSingleClassifierEnhancer impl
 		return similarities;
 	}
 
-	public static double euclidianDistance(double[] a, double[] b) {
+	public double euclidianDistance(double[] a, double[] b) {
 		double dist = 0;
 		for (int i = 0; i < a.length - 1; i++) {
-			dist += Math.pow(a[i] - b[i], 2);
+			if(Double.isNaN(a[i]) || Double.isNaN(b[i])) {
+				dist += 1.0;
+			} else {
+				if (labeled.attribute(i).isNumeric()) {
+					dist += Math.pow(a[i] - b[i], 2);
+				} else {
+					dist += a[i] == b[i] ? 0 : 1;
+				}
+			}
 		}
 		return Math.sqrt(dist);
 	}
@@ -344,7 +358,6 @@ public class SemiBoost extends RandomizableIteratedSingleClassifierEnhancer impl
 	 */
 	public Capabilities getCapabilities() {
 		Capabilities result = super.getCapabilities();
-		result.disable(Capability.MISSING_VALUES);
 
 		result.disableAllClasses();
 		result.enable(Capability.MISSING_CLASS_VALUES);

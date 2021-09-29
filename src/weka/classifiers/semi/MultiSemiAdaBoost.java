@@ -89,7 +89,7 @@ public class MultiSemiAdaBoost extends RandomizableIteratedSingleClassifierEnhan
 	protected double constant3 = -1;
 	protected double percentSampling = 0.15;
 	protected double deltaPercentile = 0.1; // 10 a 20
-	
+
 	private List<WeightedClassifier> classifiers;
 	private double delta;
 	private Instances labeled;
@@ -160,11 +160,11 @@ public class MultiSemiAdaBoost extends RandomizableIteratedSingleClassifierEnhan
 		splitInstances(instances, labeled, unlabeled);
 
 		// default or 1
-		if(constant1 == -1)
+		if (constant1 == -1)
 			constant1 = 1.0 / (double) labeled.size();
-		if(constant2 == -1)
+		if (constant2 == -1)
 			constant2 = 1.0 / (double) instances.numInstances();
-		if(constant3 == -1)
+		if (constant3 == -1)
 			constant3 = unlabeled.size() > 0 ? 1.0 / (double) (2.0 * unlabeled.size()) : 0;
 
 		classifiers = new ArrayList<>(getNumIterations());
@@ -275,7 +275,7 @@ public class MultiSemiAdaBoost extends RandomizableIteratedSingleClassifierEnhan
 			mapConfidence.put(instance, conf);
 			sumWeights += conf.probability;
 		}
-		assert sumWeights > 0;
+		//assert sumWeights > 0; it is 0 if all instances are missed
 		for (Confidence conf : mapConfidence.values()) {
 			conf.probability = conf.probability / sumWeights;
 		}
@@ -356,10 +356,18 @@ public class MultiSemiAdaBoost extends RandomizableIteratedSingleClassifierEnhan
 		return similarities;
 	}
 
-	public static double euclidianDistance(double[] a, double[] b) {
+	public double euclidianDistance(double[] a, double[] b) {
 		double dist = 0;
 		for (int i = 0; i < a.length - 1; i++) {
-			dist += Math.pow(a[i] - b[i], 2);
+			if(Double.isNaN(a[i]) || Double.isNaN(b[i])) {
+				dist += 1.0;
+			} else {
+				if (labeled.attribute(i).isNumeric()) {
+					dist += Math.pow(a[i] - b[i], 2);
+				} else {
+					dist += a[i] == b[i] ? 0 : 1;
+				}
+			}
 		}
 		return Math.sqrt(dist);
 	}
@@ -435,7 +443,6 @@ public class MultiSemiAdaBoost extends RandomizableIteratedSingleClassifierEnhan
 	 */
 	public Capabilities getCapabilities() {
 		Capabilities result = super.getCapabilities();
-		result.disable(Capability.MISSING_VALUES);
 
 		result.disableAllClasses();
 		result.disable(Capability.BINARY_CLASS);
@@ -623,7 +630,6 @@ public class MultiSemiAdaBoost extends RandomizableIteratedSingleClassifierEnhan
 			return MultiSemiAdaBoost.this;
 		}
 	}
-	
 
 	public Enumeration<Option> listOptions() {
 		Vector<Option> newVector = new Vector<Option>(5);
@@ -700,7 +706,7 @@ public class MultiSemiAdaBoost extends RandomizableIteratedSingleClassifierEnhan
 	public double getConstantLabeled() {
 		return constant1;
 	}
-	
+
 	public String constantUnlabeledTipText() {
 		return "The weight importance the unlabeled data.";
 	}
@@ -712,7 +718,7 @@ public class MultiSemiAdaBoost extends RandomizableIteratedSingleClassifierEnhan
 	public double getConstantUnlabeled() {
 		return constant3;
 	}
-	
+
 	public String constantInteractionTipText() {
 		return "The weight importance between the labeled and unlabeled data.";
 	}

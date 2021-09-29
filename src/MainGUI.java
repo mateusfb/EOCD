@@ -27,6 +27,6 @@ public class MainGUI {
 		}
 		GenericObjectEditor.determineClasses();
 
-		Explorer.main(new String[] { "iris3.semi.arff" });
+		Explorer.main(new String[] { "Test.arff" });
 	}
 }
