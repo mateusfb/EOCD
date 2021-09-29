@@ -35,7 +35,7 @@ public class MethodologySemi {
 			instances.stratify(10);
 			register = new Register();
 			for (int i = 0; i < NUM_FOLDS; i++) {
-				Instances train = instances.trainCV(NUM_FOLDS, i);
+				Instances train = new Instances(instances.trainCV(NUM_FOLDS, i));
 				ArrayList<Double> labels = eraseLabels(train, 0.9);
 				Instances test = instances.testCV(NUM_FOLDS, i);
 				Evaluation eval = new Evaluation(train);
@@ -157,6 +157,7 @@ public class MethodologySemi {
 
 	public static ArrayList<Double> eraseLabels(Instances instances, double percent) {
 		assert instances.numInstances() > 1;
+		instances.randomize(new Random(0));
 		ArrayList<Double> labels = new ArrayList<>();
 		int tenP = (int) Math.max(1, instances.numInstances() * (1.0-percent));
 		for (int i = tenP; i < instances.numInstances(); i++) {
