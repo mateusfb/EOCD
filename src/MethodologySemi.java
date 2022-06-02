@@ -73,16 +73,16 @@ public class MethodologySemi {
   
   public static ArrayList<Instances> loadInstances() throws Exception {
     ArrayList<Instances> instances = new ArrayList<>();
-    instances.add(load("Abalone.arff"));
+    instances.add(load("exec/Abalone.arff"));
     //instances.add(load("Adult.arff"));
-    instances.add(load("Arrhythmia.arff"));
+    //instances.add(load("Arrhythmia.arff"));
     //instances.add(load("Automobile.arff"));
     //instances.add(load("Btsc.arff"));
-    instances.add(load("Car.arff"));
+    //instances.add(load("Car.arff"));
     //instances.add(load("Cnae.arff"));
     //instances.add(load("Dermatology.arff"));
-    instances.add(load("Ecoli.arff"));
-    instances.add(load("Flags.arff"));
+    //instances.add(load("Ecoli.arff"));
+    //instances.add(load("Flags.arff"));
     //instances.add(load("GermanCredit.arff"));
     //instances.add(load("Glass.arff"));
     //instances.add(load("Haberman.arff"));
@@ -97,24 +97,24 @@ public class MethodologySemi {
     //instances.add(load("Mushroom.arff"));
     //instances.add(load("Musk.arff"));
     //instances.add(load("Nursery.arff"));
-    instances.add(load("OzoneLevelDetection.arff"));
+    //instances.add(load("OzoneLevelDetection.arff"));
     //instances.add(load("PenDigits.arff"));
     //instances.add(load("PhishingWebsite.arff"));
     //instances.add(load("Pima.arff"));
     //instances.add(load("PlanningRelax.arff"));
     //instances.add(load("Seeds.arff"));
     //instances.add(load("Semeion.arff"));
-    instances.add(load("SolarFlare.arff"));
-    instances.add(load("SolarFlare1.arff"));
+    //instances.add(load("SolarFlare.arff"));
+    //instances.add(load("SolarFlare1.arff"));
     //instances.add(load("Sonar.arff"));
     //instances.add(load("SpectfHeart.arff"));
-    instances.add(load("TicTacToeEndgame.arff"));
+    //instances.add(load("TicTacToeEndgame.arff"));
     //instances.add(load("Twonorm.arff"));
     //instances.add(load("Vehicle.arff"));
     //instances.add(load("Waveform.arff"));
     //instances.add(load("Wilt.arff"));
-    instances.add(load("Wine.arff"));
-    instances.add(load("Yeast.arff"));
+    instances.add(load("exec/Wine.arff"));
+    //instances.add(load("Yeast.arff"));
     return instances;
   }
   
